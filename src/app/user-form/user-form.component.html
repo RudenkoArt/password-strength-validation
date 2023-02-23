@@ -1,0 +1,12 @@
+<h3 class="text-center">Password Strength Checker</h3>
+<hr />
+<form [formGroup]="userForm">
+  <label for="email">Email</label>
+  <app-email-input [formControlName]="'userEmail'"></app-email-input>
+  <label for="password">Password</label>
+  <app-password-input [formControlName]="'userPassword'"></app-password-input>
+</form>
+<app-password-strength-bar
+  passwordToCheck="{{ userForm.value.userPassword }}"
+></app-password-strength-bar>
+<app-submit-btn></app-submit-btn>

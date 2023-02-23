@@ -6,13 +6,11 @@ import { Component, OnChanges, Input, SimpleChange } from '@angular/core';
   styleUrls: ['./password-strength-bar.component.css'],
 })
 export class PassowordStrengthBarComponent implements OnChanges {
-  @Input() passwordToCheck: any;
+  @Input() passwordToCheck!: string;
 
-  bar0: string;
-  bar1: string;
-  bar2: string;
+  barColors!: string[];
 
-  private strengthColors = {
+  private strengthColors: { [key: string]: string[] } = {
     default: ['#ddd', '#ddd', '#ddd'],
     short: ['#ff0000', '#ff0000', '#ff0000'],
     easy: ['#ff0000', '#ddd', '#ddd'],
@@ -20,18 +18,18 @@ export class PassowordStrengthBarComponent implements OnChanges {
     strong: ['#00ff00', '#00ff00', '#00ff00'],
   };
 
-  private static measureStrength(pass: string) {
+  private static measureStrength(pass: string): string {
     if (pass.length < 8) return 'short';
-    let score = 0;
+    let score: number = 0;
 
-    const variations = {
+    const variations: { [key: string]: boolean } = {
       digits: /\d/.test(pass),
       letters: /[A-Za-z]/.test(pass),
       nonWords: /\W/.test(pass),
     };
 
     for (let check in variations) {
-      score += (variations as any)[check] ? 1 : 0;
+      score += variations[check] ? 1 : 0;
     }
 
     if (score === 1) return 'easy';
@@ -40,15 +38,12 @@ export class PassowordStrengthBarComponent implements OnChanges {
     return 'strong';
   }
 
-  private setBarColors(colors: string[]) {
-    for (let _n = 0; _n < 3; _n++) {
-      (this as any)['bar' + _n] = colors[_n];
-    }
+  private setBarColors(colors: string[]): void {
+    this.barColors = colors;
   }
 
   ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
     const password = changes['passwordToCheck'].currentValue;
-
     if (password) {
       const strength = PassowordStrengthBarComponent.measureStrength(password);
       this.setBarColors(this.strengthColors[strength]);
